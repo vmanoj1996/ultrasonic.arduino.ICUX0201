@@ -21,8 +21,8 @@
 #include <invn/soniclib/chirp_bsp.h>
 
 #define UNUSED_PIN (0xFF)
-#define DEFAULT_SPI_CLOCK 11000000
-#define MAX_SPI_CLOCK 13000000
+// #define DEFAULT_SPI_CLOCK 11000000
+// #define MAX_SPI_CLOCK 13000000
 
 
 void board_init(ch_group_t *grp_ptr);

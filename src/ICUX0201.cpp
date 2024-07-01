@@ -42,6 +42,8 @@ ICUX0201::ICUX0201(SPIClass &spi_ref, uint32_t freq, int cs_id,
 
 // ICUX0201 constructor for spi interface
 ICUX0201::ICUX0201(ICUX0201_dev* dev0,ICUX0201_dev* dev1) {
+
+  Serial.println("problematic constructor called. fix it now");
   if(dev0 != NULL)
   {
     if(dev1 == NULL)
@@ -163,38 +165,60 @@ uint8_t ICUX0201::get_iq_data(int sensor_id, ch_iq_sample_t (&iq_data)[ICU_MAX_N
 
 
 // ICUX0201 constructor for spi interface
-ICUX0201_GeneralPurpose::ICUX0201_GeneralPurpose(ICUX0201_dev_GeneralPurpose& dev0,ICUX0201_dev_GeneralPurpose& dev1) {
+ICUX0201_GeneralPurpose::ICUX0201_GeneralPurpose(ICUX0201_dev_GeneralPurpose* devices[], int num_devices) 
+{
+  // int num_devices = devices.size();
+
   /* Initialize group descriptor */
-  ch_group_init(this, 2, 1 , RTC_CAL_PULSE_MS);
-  device[0] = &dev0;
-  device[1] = &dev1;
+  ch_group_init(this, num_devices, 1 , RTC_CAL_PULSE_MS);
+
+  
+  for(int index = 0; index<num_devices; index++) 
+  {
+    device[index] = devices[index];
+  }
+
 }
+
+// ICUX0201_GeneralPurpose::ICUX0201_GeneralPurpose(ICUX0201_dev_GeneralPurpose& dev0,ICUX0201_dev_GeneralPurpose& dev1) {
+//   ch_group_init(this, 2, 1 , RTC_CAL_PULSE_MS);
+//   device[0] = &dev0;
+//   device[1] = &dev1;
+// }
 
 int ICUX0201_GeneralPurpose::start_trigger(uint16_t range_mm) {
   int rc = 0;
   uint16_t range1_mm = range_mm;
-  if(num_ports > 1)
+
+  int transmitterUnit = 0;
+
+  uint32_t sensors_mean_fop;
+  // When using 2 sensors, manage ranges to avoid both sensor to compute algo at the same time
+  uint16_t max_range = get_max_range();
+  if(range_mm == 0)
   {
-    uint32_t sensors_mean_fop;
-    // When using 2 sensors, manage ranges to avoid both sensor to compute algo at the same time
-    uint16_t max_range = get_max_range();
-    if(range_mm == 0)
-    {
-      range_mm = max_range - (MIN_RANGE_DIFF);
-      range1_mm = max_range;
-    } else if( (range_mm + (MIN_RANGE_DIFF)) < max_range )
-    {
-      range1_mm = range_mm + (MIN_RANGE_DIFF);
-    } else  {
-      range_mm = max_range - (MIN_RANGE_DIFF);
-      range1_mm = max_range;
-    }
-    sensors_mean_fop = (ch_get_frequency(get_device(0)) + ch_get_frequency(get_device(1)))/2;
-    rc |= ch_set_frequency(get_device(0), sensors_mean_fop);
-    rc |= ch_set_frequency(get_device(1), sensors_mean_fop);
-    rc |= get_device(1)->start_trigger(range1_mm,CH_MODE_TRIGGERED_RX_ONLY);
+    range_mm = max_range - (MIN_RANGE_DIFF);
+    range1_mm = max_range;
+  } else if( (range_mm + (MIN_RANGE_DIFF)) < max_range )
+  {
+    range1_mm = range_mm + (MIN_RANGE_DIFF);
+  } else  {
+    range_mm = max_range - (MIN_RANGE_DIFF);
+    range1_mm = max_range;
   }
-  rc |= get_device(0)->start_trigger(range_mm,CH_MODE_TRIGGERED_TX_RX);
+
+  for(int index= 0; index<num_ports; index++)
+  {
+
+    // sensors_mean_fop = (ch_get_frequency(get_device(0)) + ch_get_frequency(get_device(1)))/2;
+    // rc |= ch_set_frequency(get_device(0), sensors_mean_fop);
+    // rc |= ch_set_frequency(get_device(1), sensors_mean_fop);
+
+    if(transmitterUnit == index) rc |= get_device(index)->start_trigger(range1_mm, CH_MODE_TRIGGERED_TX_RX);
+    else rc |= get_device(index)->start_trigger(range1_mm, CH_MODE_TRIGGERED_RX_ONLY);
+
+  }
+    
   return rc;
 }
 
@@ -202,38 +226,38 @@ void ICUX0201_GeneralPurpose::trig(void) {
   return ch_group_trigger(this);
 }
 
-int ICUX0201_GeneralPurpose::triangulate(const float distance_between_sensors_mm, float& x, float& y, float offset)
-{
-  int rc = 0;
-  float range0_mm = get_range(0);
-  float range1_mm = get_range(1);
-  float diff_mm;
+// int ICUX0201_GeneralPurpose::triangulate(const float distance_between_sensors_mm, float& x, float& y, float offset)
+// {
+//   int rc = 0;
+//   float range0_mm = get_range(0);
+//   float range1_mm = get_range(1);
+//   float diff_mm;
 
-  if ((range0_mm == 0)||(range1_mm == 0)||(range1_mm<=range0_mm))
-  {
-    /* One of the sensor losts the target */
-    return -1;
-  }
-  /* Remove transmit distance to the 2nd sensor distance */
-  range1_mm -= range0_mm + offset;
+//   if ((range0_mm == 0)||(range1_mm == 0)||(range1_mm<=range0_mm))
+//   {
+//     /* One of the sensor losts the target */
+//     return -1;
+//   }
+//   /* Remove transmit distance to the 2nd sensor distance */
+//   range1_mm -= range0_mm + offset;
 
   
-  diff_mm = (range0_mm > range1_mm) ? (range0_mm - range1_mm) : (range1_mm - range0_mm);
-  if(diff_mm > distance_between_sensors_mm)
-  {
-    /* This is not supposed to happen geometrically */
-    return -2;
-  }
-  x =  (range0_mm*range0_mm - range1_mm*range1_mm) / (2*distance_between_sensors_mm);
+//   diff_mm = (range0_mm > range1_mm) ? (range0_mm - range1_mm) : (range1_mm - range0_mm);
+//   if(diff_mm > distance_between_sensors_mm)
+//   {
+//     /* This is not supposed to happen geometrically */
+//     return -2;
+//   }
+//   x =  (range0_mm*range0_mm - range1_mm*range1_mm) / (2*distance_between_sensors_mm);
 
-  y = distance_between_sensors_mm/2 +x;
-  y = (range0_mm-y)*(range0_mm + y);
-  if(y>0)
-  {
-    y = sqrt(y);
-  } else {
-    y = 0;
-    return -3;
-  }
-  return 0;
-}
+//   y = distance_between_sensors_mm/2 +x;
+//   y = (range0_mm-y)*(range0_mm + y);
+//   if(y>0)
+//   {
+//     y = sqrt(y);
+//   } else {
+//     y = 0;
+//     return -3;
+//   }
+//   return 0;
+// }

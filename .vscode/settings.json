@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.sdf": "xml",
+        "*.world": "xml",
+        "string_view": "cpp",
+        "ostream": "cpp",
+        "new": "cpp",
+        "type_traits": "cpp"
+    }
+}

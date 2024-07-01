@@ -187,22 +187,24 @@ public:
    * @param int2_id ID of the interrupt 2 pin
    * @param mutclk_id ID of the MUTCLK pin
    */
-   ICUX0201_GeneralPurpose(SPIClass &spi_ref, uint32_t freq, int cs_id,
-                          int int1_id, int int2_id=UNUSED_PIN, int mutclk_id=UNUSED_PIN) : ICUX0201(new ICUX0201_dev_GeneralPurpose(spi_ref, freq, cs_id, int1_id, int2_id, mutclk_id)) {};
+  //  ICUX0201_GeneralPurpose(SPIClass &spi_ref, uint32_t freq, int cs_id,
+  //                         int int1_id, int int2_id=UNUSED_PIN, int mutclk_id=UNUSED_PIN) : ICUX0201(new ICUX0201_dev_GeneralPurpose(spi_ref, freq, cs_id, int1_id, int2_id, mutclk_id)) {};
   /*!
    * @brief Class constructor.
    * @param spi_ref Reference of the SPI to be used
    * @param cs_id Pin ID to be used for the SPI
    * @param int1_id ID of the interrupt 1 pin
    */
-   ICUX0201_GeneralPurpose(SPIClass &spi_ref, int cs_id,
-                          int int1_id) : ICUX0201(new ICUX0201_dev_GeneralPurpose(spi_ref, cs_id, int1_id)) {};
+  //  ICUX0201_GeneralPurpose(SPIClass &spi_ref, int cs_id, int int1_id) : ICUX0201(new ICUX0201_dev_GeneralPurpose(spi_ref, cs_id, int1_id)) {};
   /*!
    * @brief Class constructor.
    * @param dev0 First device of the group
    * @param dev1 Second device of the group
    */
-  ICUX0201_GeneralPurpose(ICUX0201_dev_GeneralPurpose& dev0,ICUX0201_dev_GeneralPurpose& dev1);
+  // ICUX0201_GeneralPurpose(ICUX0201_dev_GeneralPurpose& dev0,ICUX0201_dev_GeneralPurpose& dev1);
+
+   ICUX0201_GeneralPurpose(ICUX0201_dev_GeneralPurpose* devices[], int num_devices);
+
   /*!
    * @brief Starts sensor in trigger mode, with provided max range.
    * @param range_mm Max detection range to be configured
@@ -228,43 +230,43 @@ public:
    * @param offset 2nd sensor offset in mm 
    * @return 0 in case of success
    */
-  int triangulate(const float distance_between_sensors_mm, float& x, float& y, float offset=0);
+  // int triangulate(const float distance_between_sensors_mm, float& x, float& y, float offset=0);
 };
 
-class ICUX0201_Presence : public ICUX0201 {
-public:
-  /*!
-   * @brief Class constructor.
-   * @param spi_ref Reference of the SPI to be used
-   * @param freq SPI clock frequency to be used
-   * @param cs_id Pin ID to be used for the SPI
-   * @param int1_id ID of the interrupt 1 pin
-   * @param int2_id ID of the interrupt 2 pin
-   * @param mutclk_id ID of the MUTCLK pin
-   */
-  ICUX0201_Presence(SPIClass &spi_ref, uint32_t freq, int cs_id,
-                    int int1_id, int int2_id=UNUSED_PIN, int mutclk_id=UNUSED_PIN) : ICUX0201(new ICUX0201_dev_Presence(spi_ref, freq, cs_id, int1_id, int2_id, mutclk_id)) {};
+// class ICUX0201_Presence : public ICUX0201 {
+// public:
+//   /*!
+//    * @brief Class constructor.
+//    * @param spi_ref Reference of the SPI to be used
+//    * @param freq SPI clock frequency to be used
+//    * @param cs_id Pin ID to be used for the SPI
+//    * @param int1_id ID of the interrupt 1 pin
+//    * @param int2_id ID of the interrupt 2 pin
+//    * @param mutclk_id ID of the MUTCLK pin
+//    */
+//   ICUX0201_Presence(SPIClass &spi_ref, uint32_t freq, int cs_id,
+//                     int int1_id, int int2_id=UNUSED_PIN, int mutclk_id=UNUSED_PIN) : ICUX0201(new ICUX0201_dev_Presence(spi_ref, freq, cs_id, int1_id, int2_id, mutclk_id)) {};
 
-  /*!
-   * @brief Class constructor.
-   * @param spi_ref Reference of the SPI to be used
-   * @param cs_id Pin ID to be used for the SPI
-   * @param int1_id ID of the interrupt 1 pin
-   */
-  ICUX0201_Presence(SPIClass &spi_ref, int cs_id,
-                    int int1_id) : ICUX0201(new ICUX0201_dev_Presence(spi_ref, cs_id, int1_id)) {};
-  /*!
-   * @brief Get Presence algorithm output.
-   * @param id Id of the device in the group
-   * @return true if a moving target was detected, false otherwise
-   */
-  bool get_presence(int sensor_id = 0) { return ((ICUX0201_dev_Presence*)get_device(sensor_id))->get_presence(); };
-  /*!
-   * @brief Get Presence algorithm range.
-   * @param id Id of the device in the group
-   * @return distance to the target in cm
-   */
-  uint16_t get_range(int sensor_id = 0) { return ((ICUX0201_dev_Presence*)get_device(sensor_id))->get_range(); };
-};
+//   /*!
+//    * @brief Class constructor.
+//    * @param spi_ref Reference of the SPI to be used
+//    * @param cs_id Pin ID to be used for the SPI
+//    * @param int1_id ID of the interrupt 1 pin
+//    */
+//   ICUX0201_Presence(SPIClass &spi_ref, int cs_id,
+//                     int int1_id) : ICUX0201(new ICUX0201_dev_Presence(spi_ref, cs_id, int1_id)) {};
+//   /*!
+//    * @brief Get Presence algorithm output.
+//    * @param id Id of the device in the group
+//    * @return true if a moving target was detected, false otherwise
+//    */
+//   bool get_presence(int sensor_id = 0) { return ((ICUX0201_dev_Presence*)get_device(sensor_id))->get_presence(); };
+//   /*!
+//    * @brief Get Presence algorithm range.
+//    * @param id Id of the device in the group
+//    * @return distance to the target in cm
+//    */
+//   uint16_t get_range(int sensor_id = 0) { return ((ICUX0201_dev_Presence*)get_device(sensor_id))->get_range(); };
+// };
 
 #endif // ICUX0201_H
