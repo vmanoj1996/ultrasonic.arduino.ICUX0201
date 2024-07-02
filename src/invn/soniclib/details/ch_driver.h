@@ -79,7 +79,7 @@ extern "C" {
 	CHIRP_MAX_NUM_SENSORS /*!< Max queued non-blocking I2C/SPI transactions - value from chirp_board_config.h */
 
 #define CHDRV_FREQLOCK_TIMEOUT_MS                                                                                      \
-	100                           /*!< Time to wait in chdrv_group_start() for sensor                                  \
+	200                           /*!< Time to wait in chdrv_group_start() for sensor                                  \
 	                                      initialization, in milliseconds.  */
 #define CHDRV_BANDWIDTH_INDEX_1 6 /*!< Index of first sample to use for calculating bandwidth. */
 #define CHDRV_BANDWIDTH_INDEX_2                                                                                        \
@@ -88,12 +88,12 @@ extern "C" {
 
 #define CHDRV_SCALEFACTOR_INDEX 4 /*!< Index for calculating scalefactor. */
 
-#define CHDRV_TRIGGER_PULSE_US    5   /*!< Length of INT pulse to trigger sensor, in microseconds - minimum 800ns.  */
+#define CHDRV_TRIGGER_PULSE_US    10   /*!< Length of INT pulse to trigger sensor, in microseconds - minimum 800ns.  */
 #define CHDRV_DELAY_OVERHEAD_US   (0) /*!< Tuning parameter to adjust pre-trigger timing */
 #define CHDRV_PRETRIGGER_DELAY_US 600 /*!< Time to delay between triggering rx-only and tx/rx nodes, in us */
 #define CHDRV_POST_TRIG_IEN_DELAY_US                                                                                   \
-	10 /*!< Time to delay after triggering shared int/trig before re-enabling interrupt */
-#define CHDRV_POST_ALGO_INIT_DELAY_MS 3 /*!< Time to delay after triggering algorithm init on sensor, in ms */
+	30 /*!< Time to delay after triggering shared int/trig before re-enabling interrupt */
+#define CHDRV_POST_ALGO_INIT_DELAY_MS 10 /*!< Time to delay after triggering algorithm init on sensor, in ms */
 #define CHDRV_DELAY_EN_CHARGE_PUMP_MS (5)
 #define CHDRV_EVENT_TIMEOUT_MS        (750) /*!< Max time to wait for sensor event, in ms */
 
