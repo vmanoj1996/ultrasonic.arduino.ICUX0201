@@ -169,6 +169,7 @@ extern "C" void chbsp_int2_interrupt_disable(ch_dev_t *dev_ptr)
 
 extern "C" void chbsp_spi_cs_on(ch_dev_t *dev_ptr)
 {
+  chbsp_delay_us(30);
   ICUX0201_dev* device = (ICUX0201_dev*)dev_ptr;
   noInterrupts();
   device->spi_begin_transaction();
@@ -179,6 +180,7 @@ extern "C" void chbsp_spi_cs_off(ch_dev_t *dev_ptr)
   ICUX0201_dev* device = (ICUX0201_dev*)dev_ptr;
   device->spi_end_transaction();
   interrupts();
+  chbsp_delay_us(30);
 }
 
 extern "C" int chbsp_spi_write(ch_dev_t *dev_ptr, const uint8_t *data, uint16_t num_bytes)
