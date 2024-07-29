@@ -247,6 +247,7 @@ const char *ICUX0201_dev::fw_version(void) {
   return ch_get_fw_version_string(this);
 }
 
+#define OUR_SERIAL Serial1
 void ICUX0201_dev::print_informations(void) {
   Serial.print("Sensor ");
   Serial.print(io_index);

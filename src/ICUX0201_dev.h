@@ -36,7 +36,7 @@ extern "C" {
 
 #define ICUX0201_DEBUG 0 //!< Debug mode
 #define UNUSED_PIN (0xFF)
-#define DEFAULT_SPI_CLOCK 8e6
+#define DEFAULT_SPI_CLOCK 100e3
 #define MAX_SPI_CLOCK 13000000
 
 typedef void (icux0201_dev_irq_handler)(void);
