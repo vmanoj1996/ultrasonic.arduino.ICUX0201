@@ -210,7 +210,7 @@ public:
    * @param range_mm Max detection range to be configured
    * @return 0 in case of success
    */
-  int start_trigger(uint16_t range_mm=0);
+  int start_trigger(uint16_t range_mm, int transmitterUnit, uint32_t sensors_mean_fop);
   /*!
    * @brief Trig sensor measurement.
    */

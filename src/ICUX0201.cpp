@@ -186,13 +186,13 @@ ICUX0201_GeneralPurpose::ICUX0201_GeneralPurpose(ICUX0201_dev_GeneralPurpose* de
 //   device[1] = &dev1;
 // }
 
-int ICUX0201_GeneralPurpose::start_trigger(uint16_t range_mm) {
+int ICUX0201_GeneralPurpose::start_trigger(uint16_t range_mm, int transmitterUnit, uint32_t sensors_mean_fop) {
   int rc = 0;
   uint16_t range1_mm = range_mm;
 
-  int transmitterUnit = 0;
+  // int transmitterUnit = transmittingUnit;
 
-  uint32_t sensors_mean_fop;
+  // uint32_t sensors_mean_fop;
   // When using 2 sensors, manage ranges to avoid both sensor to compute algo at the same time
   uint16_t max_range = get_max_range();
   if(range_mm == 0)
@@ -211,8 +211,8 @@ int ICUX0201_GeneralPurpose::start_trigger(uint16_t range_mm) {
   {
 
     // sensors_mean_fop = (ch_get_frequency(get_device(0)) + ch_get_frequency(get_device(1)))/2;
-    // rc |= ch_set_frequency(get_device(0), sensors_mean_fop);
-    // rc |= ch_set_frequency(get_device(1), sensors_mean_fop);
+    rc |= ch_set_frequency(get_device(0), sensors_mean_fop);
+    rc |= ch_set_frequency(get_device(1), sensors_mean_fop);
 
     if(transmitterUnit == index) rc |= get_device(index)->start_trigger(range1_mm, CH_MODE_TRIGGERED_TX_RX);
     else rc |= get_device(index)->start_trigger(range1_mm, CH_MODE_TRIGGERED_RX_ONLY);
