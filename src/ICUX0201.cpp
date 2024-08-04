@@ -180,11 +180,6 @@ ICUX0201_GeneralPurpose::ICUX0201_GeneralPurpose(ICUX0201_dev_GeneralPurpose* de
 
 }
 
-// ICUX0201_GeneralPurpose::ICUX0201_GeneralPurpose(ICUX0201_dev_GeneralPurpose& dev0,ICUX0201_dev_GeneralPurpose& dev1) {
-//   ch_group_init(this, 2, 1 , RTC_CAL_PULSE_MS);
-//   device[0] = &dev0;
-//   device[1] = &dev1;
-// }
 
 int ICUX0201_GeneralPurpose::start_trigger(uint16_t range_mm, int transmitterUnit, uint32_t sensors_mean_fop) {
   // set transmit unit to -1 to disable
@@ -220,39 +215,3 @@ int ICUX0201_GeneralPurpose::start_trigger(uint16_t range_mm, int transmitterUni
 void ICUX0201_GeneralPurpose::trig(void) {
   return ch_group_trigger(this);
 }
-
-// int ICUX0201_GeneralPurpose::triangulate(const float distance_between_sensors_mm, float& x, float& y, float offset)
-// {
-//   int rc = 0;
-//   float range0_mm = get_range(0);
-//   float range1_mm = get_range(1);
-//   float diff_mm;
-
-//   if ((range0_mm == 0)||(range1_mm == 0)||(range1_mm<=range0_mm))
-//   {
-//     /* One of the sensor losts the target */
-//     return -1;
-//   }
-//   /* Remove transmit distance to the 2nd sensor distance */
-//   range1_mm -= range0_mm + offset;
-
-  
-//   diff_mm = (range0_mm > range1_mm) ? (range0_mm - range1_mm) : (range1_mm - range0_mm);
-//   if(diff_mm > distance_between_sensors_mm)
-//   {
-//     /* This is not supposed to happen geometrically */
-//     return -2;
-//   }
-//   x =  (range0_mm*range0_mm - range1_mm*range1_mm) / (2*distance_between_sensors_mm);
-
-//   y = distance_between_sensors_mm/2 +x;
-//   y = (range0_mm-y)*(range0_mm + y);
-//   if(y>0)
-//   {
-//     y = sqrt(y);
-//   } else {
-//     y = 0;
-//     return -3;
-//   }
-//   return 0;
-// }
