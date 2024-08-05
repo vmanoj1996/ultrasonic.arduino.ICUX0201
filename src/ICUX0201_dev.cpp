@@ -35,7 +35,7 @@
  * within the measurement.
  */
 #define CHIRP_TX_SEG_CYCLES (640) /* Transmit segment - length (cycles) */
-#define CHIRP_TX_SEG_PULSE_WIDTH (3) /* width of each cycle pulse */
+#define CHIRP_TX_SEG_PULSE_WIDTH (4) /* width of each cycle pulse */
 #define CHIRP_TX_SEG_PHASE (8) /* tx phase */
 #define CHIRP_TX_SEG_INT_EN (0) /* no interrupt when done */
 

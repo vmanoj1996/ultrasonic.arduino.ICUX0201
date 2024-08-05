@@ -33,7 +33,7 @@ extern "C" {
 /* Sensor configuration */
 /* Tx step */
 #define SENSOR_CFG_SEG0_TX_LENGTH_CYCLES (ICU_PRESENCE_RECOMMENDED_PULSE_LENGTH)
-#define SENSOR_CFG_SEG0_TX_PULSE_WIDTH_SMP (3)
+#define SENSOR_CFG_SEG0_TX_PULSE_WIDTH_SMP (4)
 #define SENSOR_CFG_SEG0_TX_PHASE_SMP (8)
 #define SENSOR_CFG_SEG0_TX_INT_EN (0)
 /* Rx step to get the ultrasound echo */
