@@ -1,3 +1,5 @@
+// UNUSED
+
 /*
  *
  * Copyright (c) [2023] by InvenSense, Inc.
@@ -14,6 +16,8 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
+
+#ifdef BUILD_PRES_CPP
 
 #include "Arduino.h"
 #include "ICUX0201_dev.h"
@@ -211,3 +215,5 @@ uint16_t ICUX0201_dev_Presence::get_range(void) {
 
   return last_algo_output.motion_range_cm;
 }
+
+#endif

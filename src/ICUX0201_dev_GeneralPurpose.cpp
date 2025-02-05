@@ -15,12 +15,15 @@
  *
  */
 
+
 #include "ICUX0201.h"
 #include <invn/soniclib/sensor_fw/icu_gpt/icu_gpt.h>
 #include <invn/soniclib/ch_rangefinder.h>
 
 #include "board/chbsp_chirp.h"
 #include <invn/soniclib/sensor_fw/icu_init/icu_init.h>
+
+#include "myconfig.h"
 
 /* Target detection thresholds
  * These definitions set the sensor's target detection thresholds.  These
@@ -40,24 +43,23 @@
  * The following symbols define the individual transmit and receive segments
  * within the measurement.
  */
-#define CHIRP_TX_SEG_CYCLES (640)    /* Transmit segment - length (cycles) */
-#define CHIRP_TX_SEG_PULSE_WIDTH (4) /* width of each cycle pulse */
-#define CHIRP_TX_SEG_PHASE (8)       /* tx phase */
-#define CHIRP_TX_SEG_INT_EN (0)      /* no interrupt when done */
+// #define CHIRP_TX_SEG_CYCLES (640)    /* Transmit segment - length (cycles) */
+// #define CHIRP_TX_SEG_PULSE_WIDTH (4) /* width of each cycle pulse */
+// #define CHIRP_TX_SEG_PHASE (8)       /* tx phase */
+// #define CHIRP_TX_SEG_INT_EN (0)      /* no interrupt when done */
 
-#define CHIRP_RX_SEG_0_SAMPLES (1)      /* Receive segment 0 - single sample */
-#define CHIRP_RX_SEG_0_GAIN_REDUCE (24) /* reduce gain */
-#define CHIRP_RX_SEG_0_ATTEN (1)        /* use attenuation */
-#define CHIRP_RX_SEG_0_INT_EN (0)       /* no interrupt when done */
+// #define CHIRP_RX_SEG_0_SAMPLES (1)      /* Receive segment 0 - single sample */
+// #define CHIRP_RX_SEG_0_GAIN_REDUCE (24) /* reduce gain */
+// #define CHIRP_RX_SEG_0_ATTEN (1)        /* use attenuation */
+// #define CHIRP_RX_SEG_0_INT_EN (0)       /* no interrupt when done */
 
-/* CHIRP_RX_SEG_1_SAMPLES defined at runtime depending on range */
-#define CHIRP_RX_SEG_1_GAIN_REDUCE (0) /* no gain reduction */
-#define CHIRP_RX_SEG_1_ATTEN (0)       /* no attenuation */
-#define CHIRP_RX_SEG_1_INT_EN (1)      /* generate interrupt when done (if eligible) */
+// /* CHIRP_RX_SEG_1_SAMPLES defined at runtime depending on range */
+// #define CHIRP_RX_SEG_1_GAIN_REDUCE (0) /* no gain reduction */
+// #define CHIRP_RX_SEG_1_ATTEN (0)       /* no attenuation */
+// #define CHIRP_RX_SEG_1_INT_EN (1)      /* generate interrupt when done (if eligible) */
 
-/* Measurement configuration struct - starting/default values */
 static ch_meas_config_t meas_config_gpt = {
-    .odr = CH_ODR_FREQ_DIV_8,
+    .odr = SENSOR_SAMPLING_RATE,
     .meas_period = 0,
     .mode = CH_MEAS_MODE_ACTIVE,
 };
@@ -69,6 +71,7 @@ static icu_gpt_algo_config_t gpt_algo_config = {
     .num_ranges = 1,
     .filter_update_interval = 0, /* update filter every sample */
 };
+
 
 ch_thresholds_t chirp_detect_thresholds_icu10201 = {
     .threshold = {
@@ -125,7 +128,7 @@ int ICUX0201_dev_GeneralPurpose::configure_measure(uint16_t range_mm, ch_mode_t 
 
   if (range_mm == 0) {
     /* get max range from sensor maximum range */
-    range_mm = get_max_range();
+    range_mm = 4400;
   }
 
   rc |= ch_meas_init(this, 0, &meas_config_gpt, NULL);
